@@ -8,51 +8,63 @@ package com.springboot.md.exception;
  */
 public class ApiException extends RuntimeException {
 
-	public static ApiException create(int code){
-		return new ApiException(code);
-	}
-//message
-//message ex
-//code message
-//code message ex
-//code message data
-	private int code = 400;
+    public static ApiException create(int code) {
+        throw new ApiException(code);
+    }
 
-	private Object data;
+    public static ApiException create(String message) {
+        throw new ApiException(message);
+    }
 
-	private ApiException(int code) {
-		this.code = code;
-	}
+    public static ApiException create(int code, String message) {
+        throw new ApiException(code, message);
+    }
 
-	private ApiException(String message) {
-		super(message);
-	}
+    public static ApiException create(int code, String message, Exception exception) {
+        throw new ApiException(code, message, exception);
+    }
 
-	private ApiException(int code, String message) {
-		super(message);
-		this.code = code;
-	}
+    public static ApiException create(int code, String message, Object data) {
+        throw new ApiException(code, message, data);
+    }
 
-	private ApiException(String message,Exception ex){
-		super(message,ex);
-	}
+    private int code = 400;
 
-	private ApiException(int code,String message,Exception ex){
-		super(message,ex);
-		this.code=code;
-	}
+    private Object data;
 
-	private ApiException(int code,String message,Object data){
-		super(message);
-		this.code=code;
-		this.data=data;
-	}
+    private ApiException(int code) {
+        this.code = code;
+    }
 
-	public int getCode(){
-		return code;
-	}
+    private ApiException(String message) {
+        super(message);
+    }
 
-	public Object getData(){
-		return data;
-	}
+    private ApiException(int code, String message) {
+        super(message);
+        this.code = code;
+    }
+
+    private ApiException(String message, Exception ex) {
+        super(message, ex);
+    }
+
+    private ApiException(int code, String message, Exception ex) {
+        super(message, ex);
+        this.code = code;
+    }
+
+    private ApiException(int code, String message, Object data) {
+        super(message);
+        this.code = code;
+        this.data = data;
+    }
+
+    public int getCode() {
+        return code;
+    }
+
+    public Object getData() {
+        return data;
+    }
 }

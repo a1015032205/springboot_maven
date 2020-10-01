@@ -22,35 +22,23 @@ import org.springframework.stereotype.Component;
 @SuppressWarnings("rawtypes")
 @Component
 public class ApplicationReadyListener implements ApplicationListener {
-	@Override
-	public void onApplicationEvent(ApplicationEvent applicationEvent) {
-		if (applicationEvent instanceof ApplicationEnvironmentPreparedEvent)
-		{
-			log.info("================  初始化环境变量 =================");
-		}
-		else if (applicationEvent instanceof ApplicationPreparedEvent)
-		{
-			log.info("================  初始化完成 =================");
-		}
-		else if (applicationEvent instanceof ContextRefreshedEvent)
-		{
-			log.info("================  容器正在刷新，等待启动 =================");
-		}
-		else if (applicationEvent instanceof ApplicationReadyEvent)
-		{
-			String server = ((ApplicationReadyEvent) applicationEvent).getSpringApplication().getAllSources().iterator().next().toString();
-			log.info("================  {},启动完成 =================",server.substring(server.lastIndexOf(".")+1));
-		}
-		else if (applicationEvent instanceof ContextStartedEvent)
-		{
-			log.info("================  应用启动 =================");
-		}
-		else if (applicationEvent instanceof ContextStoppedEvent)
-		{
-			log.info("================  应用停止 =================");
-		}else if (applicationEvent instanceof ContextClosedEvent)
-		{
-			log.info("================  应用关闭 =================");
-		}
-	}
+    @Override
+    public void onApplicationEvent(ApplicationEvent applicationEvent) {
+        if (applicationEvent instanceof ApplicationEnvironmentPreparedEvent) {
+            log.info("================  初始化环境变量 =================");
+        } else if (applicationEvent instanceof ApplicationPreparedEvent) {
+            log.info("================  初始化完成 =================");
+        } else if (applicationEvent instanceof ContextRefreshedEvent) {
+            log.info("================  容器正在刷新，等待启动 =================");
+        } else if (applicationEvent instanceof ApplicationReadyEvent) {
+            String server = ((ApplicationReadyEvent) applicationEvent).getSpringApplication().getAllSources().iterator().next().toString();
+            log.info("================  {},启动完成 =================", server.substring(server.lastIndexOf(".") + 1));
+        } else if (applicationEvent instanceof ContextStartedEvent) {
+            log.info("================  应用启动 =================");
+        } else if (applicationEvent instanceof ContextStoppedEvent) {
+            log.info("================  应用停止 =================");
+        } else if (applicationEvent instanceof ContextClosedEvent) {
+            log.info("================  应用关闭 =================");
+        }
+    }
 }

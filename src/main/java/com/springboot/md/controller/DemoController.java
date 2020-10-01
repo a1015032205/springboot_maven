@@ -8,6 +8,7 @@ package com.springboot.md.controller;
  */
 
 import com.springboot.md.config.AbstracController;
+import com.springboot.md.exception.ApiException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,6 +19,7 @@ public class DemoController extends AbstracController {
 
 	@GetMapping
 	public Object demo(){
+        ApiException.create(200, "暂无数据");
 		System.out.println("xxxxxxxxxxxx");
 		return setSuccessModelMap();
 	}
