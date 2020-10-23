@@ -1,11 +1,5 @@
 package com.springboot.md.controller;
 
-/**
- * @Author: 秒度
- * @Email: fangxin.md@Gmail.com
- * @Date: 2020-10-23 22:54
- * @Description:
- */
 
 @SuppressWarnings("all")
 public class LoveController {
@@ -20,6 +14,12 @@ public class LoveController {
     public static void test() {
 
 
+        while (currentMe < youWantLove)
+            for (; currentTime <= endTime; currentTime++) currentMe++;
+        while (currentMe == youWantLove && endTime >= currentTime) weLoveTime++;
+
+
+    }
 
 
 
@@ -28,9 +28,94 @@ public class LoveController {
 
 
 
-                                                                while (currentMe < youWantLove)
-                                                                    for (; currentTime <= endTime; currentTime++) currentMe++;
-                                                                while (currentMe == youWantLove && endTime >= currentTime) weLoveTime++;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public static void test() {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    while (currentMe < youWantLove)
+                        for (; currentTime <= endTime; currentTime++) currentMe++;
+                    while (currentMe == youWantLove && endTime >= currentTime) weLoveTime++;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -45,5 +130,44 @@ public class LoveController {
 
 
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }
