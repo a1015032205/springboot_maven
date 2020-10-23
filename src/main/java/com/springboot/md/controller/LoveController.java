@@ -96,6 +96,7 @@ public class LoveController {
 
 
 
+
                     while (currentMe < youWantLove)
                         for (; currentTime <= endTime; currentTime++) currentMe++;
                     while (currentMe == youWantLove && endTime >= currentTime) weLoveTime++;
