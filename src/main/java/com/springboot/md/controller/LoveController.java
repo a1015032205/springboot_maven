@@ -1,6 +1,11 @@
 package com.springboot.md.controller;
 
 
+import com.springboot.md.pojo.YouLove;
+import org.springframework.web.bind.annotation.GetMapping;
+
+import java.util.concurrent.atomic.AtomicInteger;
+
 @SuppressWarnings("all")
 public class LoveController {
     private static int currentMe = 0, youWantLove = 10, time = 0, endTime = 10, currentTime = 0, weLoveTime = 0;
@@ -131,7 +136,37 @@ public class LoveController {
 
 
     }
+    @GetMapping("/test1")
+    public Object test1() {
+        YouLove yourHeart = new YouLove();
+        AtomicInteger youWantLove = new AtomicInteger(10);
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                do currentMe++;
+                                while (youWantLove.compareAndSet(currentMe, youWantLove.get()));
+                                return yourHeart;
+
+
+    }
 
 
 
