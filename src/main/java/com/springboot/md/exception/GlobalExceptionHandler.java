@@ -2,6 +2,7 @@ package com.springboot.md.exception;
 
 import cn.hutool.core.exceptions.ExceptionUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -54,9 +55,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ApiException.class)
     public ResponseEntity apiException(HttpServletRequest request, Exception ex) {
         log.error(REQUEST + ": " + request.getRequestURL() + "发生" + ERROR + "\n" + requestToString(request), ex);
-       // String s = exToString(ex);
-        String s = ExceptionUtil.stacktraceToString(ex);
-       log.error(s);
+        ApiException apiException = (ApiException) ex;
+        String s = ExceptionUtil.stacktraceToString(apiException);
+      //  apiException.getCode(),apiException.getMessage(),s,apiException.getData() 分装error 放在bogy
+      //  return ResponseEntity.status(HttpStatus.OK).body(apiException.getCode(),apiException.getMessage(),s,apiException.getData());
         return null;
     }
 }

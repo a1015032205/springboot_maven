@@ -25,6 +25,7 @@ public class CommonJsonFilter {
 
 	/**
 	 * 将所有的数据类型变成string
+	 *
 	 * @return
 	 */
 	public static Jackson2ObjectMapperBuilderCustomizer customizer() {
@@ -39,16 +40,17 @@ public class CommonJsonFilter {
 
 	/**
 	 * 使用fastjson对消息进行转换
+	 *
 	 * @return
 	 */
-	public static List<HttpMessageConverter> converters(){
-		List<HttpMessageConverter> converters=new ArrayList<>();
+	public static List<HttpMessageConverter> converters() {
+		List<HttpMessageConverter> converters = new ArrayList<>();
 		FastJsonHttpMessageConverter converter = new FastJsonHttpMessageConverter();
 		FastJsonConfig config = new FastJsonConfig();
 		config.setCharset(Charset.forName(CHAR_SET));
 		config.setSerializerFeatures();
 		converter.setFastJsonConfig(config);
-		List<MediaType> mediaTypes=new ArrayList<>();
+		List<MediaType> mediaTypes = new ArrayList<>();
 		mediaTypes.add(MediaType.APPLICATION_JSON);
 		mediaTypes.add(MediaType.APPLICATION_JSON_UTF8);
 		mediaTypes.add(MediaType.APPLICATION_ATOM_XML);
@@ -71,7 +73,7 @@ public class CommonJsonFilter {
 		return converters;
 	}
 
-	public static ResourceHandlerRegistry addResourceHandler(ResourceHandlerRegistry registry){
+	public static ResourceHandlerRegistry addResourceHandler(ResourceHandlerRegistry registry) {
 		registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
 		registry.addResourceHandler("webjars/**").addResourceLocations("classpath:/META_INF/resources/webjars");
 		return registry;
