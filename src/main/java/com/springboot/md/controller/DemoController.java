@@ -10,42 +10,68 @@ package com.springboot.md.controller;
 import cn.hutool.core.io.FileUtil;
 import com.springboot.md.config.AbstracController;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.util.FileCopyUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.ServletOutputStream;
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.List;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 @RestController
-@RequestMapping
 @Slf4j
+public class DemoController extends AbstracController implements InitializingBean {
 
-public class DemoController extends AbstracController {
+
+    public DemoController() {
+        System.out.println("DemoController");
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        System.out.println("afterPropertiesSet");
+    }
+
+    @PostConstruct
+    public void init() {
+        System.out.println("PostConstruct");
+    }
 
 
-    @GetMapping("/demo")
-    public void demo(HttpServletResponse response) {
+    public Object demo(HttpServletResponse response) throws Exception {
         List<File> jpg = FileUtil.loopFiles("E:\\DOTA2", pathname -> pathname.getName().toLowerCase().endsWith("jpg"));
-        String strZipPath = "e:\\DOTA2\\B" + ".zip";
-        try (ServletOutputStream outputStream = response.getOutputStream(); ZipOutputStream out = new ZipOutputStream(new FileOutputStream(strZipPath))) {
-            for (File file : jpg) {
-                out.putNextEntry(new ZipEntry(file.getName()));
-                out.write(FileUtil.readBytes(file));
-                out.closeEntry();
-            }
-            out.close();
-            BufferedInputStream bis = new BufferedInputStream(new FileInputStream(strZipPath));
-            //将输入流的数据拷贝到输入流输出
-            FileCopyUtils.copy(bis, outputStream);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+        FileInputStream inputStream = new FileInputStream(jpg.get(0));
+        byte[] bytes = new byte[inputStream.available()];
+        inputStream.read(bytes, 0, inputStream.available());
+        return bytes;
+//        String strZipPath = "e:\\DOTA2\\B" + ".zip";
+//
+//        //  File zip = ZipUtil.zip(FileUtil.file(strZipPath), true, jpg.toArray(new File[]{}));
+//        // 配置文件下载
+//        response.setHeader("content-type", "application/octet-stream");
+//        response.setContentType("image/jpeg");
+//        // 下载文件能正常显示中文
+//        response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode("XX.JPG", "UTF-8"));
+//
+//        ServletOutputStream outputStream = response.getOutputStream();
+//        outputStream.write(FileUtil.readBytes(jpg.get(0)));
+//        outputStream.flush();
+//        outputStream.close();
+//        try (ServletOutputStream outputStream = response.getOutputStream(); ZipOutputStream out = new ZipOutputStream(new FileOutputStream(strZipPath))) {
+//            for (File file : jpg) {
+//                out.putNextEntry(new ZipEntry(file.getName()));
+//                out.write(FileUtil.readBytes(file));
+//                out.closeEntry();
+//            }
+//            out.close();
+//            BufferedInputStream bis = new BufferedInputStream(new FileInputStream(strZipPath));
+//            //将输入流的数据拷贝到输入流输出
+//            FileCopyUtils.copy(bis, outputStream);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
         //     jpg.forEach(x -> FileUtil.writeFromStream(FileUtil.getInputStream(x), "E:\\DOTA3\\" + "20201023" + x.getName()));
         //    return setSuccessModelMap();
     }
