@@ -4,17 +4,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.util.Assert;
 
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
 
-@SpringBootApplication(exclude = DataSourceAutoConfiguration.class)
+@SpringBootApplication
 @Slf4j
 public class DemoApplication extends SpringApplication {
 
@@ -28,12 +24,12 @@ public class DemoApplication extends SpringApplication {
 
     public static void main(String[] args) throws IOException {
 
-        String filePath = "E:\\java\\WorkSpace\\" + "application.yml";
-        InputStream ism = new FileInputStream(filePath);
-        Properties properties = new Properties();
-        properties.load(ism);
+//        String filePath = "E:\\java\\WorkSpace\\" + "application.yml";
+//        InputStream ism = new FileInputStream(filePath);
+//        Properties properties = new Properties();
+//        properties.load(ism);
         DemoApplication demoApplication = new DemoApplication(DemoApplication.class);
-        demoApplication.setDefaultProperties(properties);
+        // demoApplication.setDefaultProperties(properties);
         demoApplication.run(args);
     }
 

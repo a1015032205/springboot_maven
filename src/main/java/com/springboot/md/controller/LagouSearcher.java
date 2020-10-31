@@ -30,7 +30,7 @@ public class LagouSearcher extends AbstracController {
         //创建webDriver
         WebDriver webDriver = new ChromeDriver();
         //指定要爬取的地址
-        webDriver.get("https://www.lagou.com/zhaopin/Java/?labelWords=label");
+        webDriver.get("https://www.zhipin.com/c100010000-p100101/?page=1&ka=page-1");
         //通过Xpath选择元素
 //        //选择地区
 //        are(webDriver, "武汉");
@@ -54,9 +54,11 @@ public class LagouSearcher extends AbstracController {
      * @return
      */
     private void extractJob(WebDriver webDriver) {
-        WebElement areElement = webDriver.findElement(By.xpath("/html/body/div[9]/div/div[2]"));
-        //*[@id="filterCollapse"]/div[1]/div[2]/li/div[2]/div/a[2]
-        areElement.click();
+        List<WebElement> elements = webDriver.findElements(By.xpath("job-primary"));
+        for (WebElement element : elements) {
+            String name = element.findElement(By.className("job-name")).getText();
+            System.out.println(name);
+        }
         List<WebElement> jobElements = webDriver.findElements(By.className("con_list_item"));
         for (WebElement jobElement : jobElements) {
             Map<String, Object> map = new HashMap<>();
