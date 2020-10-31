@@ -1,9 +1,9 @@
 package com.springboot.md.controller;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.map.MapUtil;
 import com.springboot.md.config.AbstracController;
 import com.springboot.md.dao.BossJavaJobMapper;
+import com.springboot.md.pojo.BossJavaJob;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -54,7 +54,7 @@ public class BossJava extends AbstracController {
         options.setExperimentalOption("excludeSwitches", Collections.singletonList("enable-automation"));
         WebDriver webDriver = new ChromeDriver(options);
         // 窗口最大化
-        webDriver.manage().window().maximize();
+        //    webDriver.manage().window().maximize();
         webDriver.get("https://www.zhipin.com/c100010000-p100101/?page=1&ka=page-1");
         //通过Xpath选择元素
 //        //选择地区
@@ -72,65 +72,65 @@ public class BossJava extends AbstracController {
     }
 
 
-    public void demo1(Map<String, Object> map, WebElement jobElement) {
+    public void demo1(BossJavaJob bossJava, WebElement jobElement) {
         //公司性质  互联网
         String type = jobElement.findElement(By.className("company-text")).findElement(By.className("false-link")).getText();
         //   log.info("公司性质======================》[{}]", type);
-        map.put("type", type);
+        bossJava.setType(type);
     }
 
-    public void demo2(Map<String, Object> map, WebElement jobElement) {
+    public void demo2(BossJavaJob bossJava, WebElement jobElement) {
         //招聘人
         String name = jobElement.findElement(By.className("name")).getText();
         String substring1 = name.substring(0, 3);
         //  log.info("招聘人======================》[{}]", substring1);
-        map.put("name", substring1);
+        bossJava.setName(substring1);
     }
 
-    public void demo3(Map<String, Object> map, WebElement jobElement) {
+    public void demo3(BossJavaJob bossJava, WebElement jobElement) {
 
         //公司名称
         String companyName = jobElement.findElement(By.className("company-text")).findElement(By.className("name")).getText();
-        //   log.info("公司名称======================》[{}]", companyName);
-        map.put("companyName", companyName);
+        log.info("公司名称======================》[{}]", companyName);
+        bossJava.setCompanyName(companyName);
     }
 
-    public void demo4(Map<String, Object> map, WebElement jobElement) {
+    public void demo4(BossJavaJob bossJava, WebElement jobElement) {
         // 职位名称
         String jobName = jobElement.findElement(By.className("job-name")).getText();
         //  log.info("职位名称======================》[{}]", jobName);
-        map.put("jobName", jobName);
+        bossJava.setJobName(jobName);
     }
 
-    public void demo5(Map<String, Object> map, WebElement jobElement) {
+    public void demo5(BossJavaJob bossJava, WebElement jobElement) {
         //工资  8k-14k
         String money = jobElement.findElement(By.className("red")).getText();
         //   log.info("薪资======================》[{}]", money);
-        map.put("money", money);
+        bossJava.setMoney(money);
     }
 
-    public void demo6(Map<String, Object> map, WebElement jobElement) {
+    public void demo6(BossJavaJob bossJava, WebElement jobElement) {
         //地区 [漕河泾]
         String are = jobElement.findElement(By.className("job-area")).getText();
         String[] split = are.split("·");
-        map.put("city", split[0]); //城市
-        map.put("are", split[1]); //区域
+        bossJava.setCity(split[0]);//城市
+        bossJava.setAre(split[1]); //区域
         if (split.length > 2) {
-            map.put("street", split[2]); //街道
+            bossJava.setStreet(split[2]); //街道
         }
         //    log.info("地区======================》[{}]", are);
     }
 
-    public void demo7(Map<String, Object> map, WebElement jobElement) {
+    public void demo7(BossJavaJob bossJava, WebElement jobElement) {
         String education = ((RemoteWebElement) jobElement).findElementByTagName("p").getText();
         for (String s : list1) {
-            if (education.equalsIgnoreCase(s)) {
+            if (education.endsWith(s)) {
                 //年限
                 String year = education.substring(0, education.length() - 2);
                 //学历
                 String s1 = education.split(year)[1];
-                map.put("year", year);
-                map.put("education", s1);
+                bossJava.setYear(year);
+                bossJava.setEducation(s1);
                 //    log.info("年限要求======================》[{}]", year);
                 //      log.info("学历要求======================》[{}]", s1);
                 break;
@@ -138,25 +138,25 @@ public class BossJava extends AbstracController {
         }
     }
 
-    public void demo8(Map<String, Object> map, WebElement jobElement) {
+    public void demo8(BossJavaJob bossJava, WebElement jobElement) {
 
         //福利
         String welfare = jobElement.findElement(By.className("info-desc")).getText();
         //    log.info("待遇秒速======================》[{}]", welfare);
-        map.put("welfare", welfare);
+        bossJava.setWelfare(welfare);
     }
 
-    public void demo9(Map<String, Object> map, WebElement jobElement) {
+    public void demo9(BossJavaJob bossJava, WebElement jobElement) {
 
         //  技术栈   Java
         List<WebElement> list = jobElement.findElements(By.className("tag-item"));
         String collect = list.stream().map(WebElement::getText).collect(Collectors.joining(","));
-        map.put("technology", collect);
+        bossJava.setTechnology(collect);
         //    log.info("技术栈======================》[{}]", collect);
 
     }
 
-    public void demo10(Map<String, Object> map, WebElement jobElement) {
+    public void demo10(BossJavaJob bossJava, WebElement jobElement) {
         //互联网不需要融资500-999人
         String p = jobElement.findElement(By.className("company-text")).findElement(By.tagName("p")).getText();
         for (String s : list2) {
@@ -164,8 +164,8 @@ public class BossJava extends AbstracController {
                 String[] split1 = p.split(s);
                 //人数
                 String num = split1[1];
-                map.put("num", num);
-                map.put("Listed", s);
+                bossJava.setNum(num);
+                bossJava.setListed(s);
                 //       log.info("人数=====================》[{}]", num);
                 //       log.info("上市情况=====================》[{}]", s);
             }
@@ -175,30 +175,42 @@ public class BossJava extends AbstracController {
 
     private void extractJob(WebDriver webDriver) {
         List<WebElement> elements = webDriver.findElements(By.className("job-primary"));
-        List<Map<String, Object>> collect = elements.parallelStream().map(jobElement -> {
-            Map<String, Object> map = MapUtil.newConcurrentHashMap(128);
-            executor.execute(() -> demo1(map, jobElement));
-            executor.execute(() -> demo2(map, jobElement));
-            executor.execute(() -> demo3(map, jobElement));
-            executor.execute(() -> demo4(map, jobElement));
-            executor.execute(() -> demo5(map, jobElement));
-            executor.execute(() -> demo6(map, jobElement));
-            executor.execute(() -> demo7(map, jobElement));
-            executor.execute(() -> demo8(map, jobElement));
-            executor.execute(() -> demo9(map, jobElement));
-            executor.execute(() -> demo10(map, jobElement));
-            return map;
+        List<BossJavaJob> collect = elements.stream().map(jobElement -> {
+            BossJavaJob bossJava = new BossJavaJob();
+//            executor.execute(() -> demo1(bossJava, jobElement));
+//            executor.execute(() -> demo2(bossJava, jobElement));
+//            executor.execute(() -> demo3(bossJava, jobElement));
+//            executor.execute(() -> demo4(bossJava, jobElement));
+//            executor.execute(() -> demo5(bossJava, jobElement));
+//            executor.execute(() -> demo6(bossJava, jobElement));
+//            executor.execute(() -> demo7(bossJava, jobElement));
+//            executor.execute(() -> demo8(bossJava, jobElement));
+//            executor.execute(() -> demo9(bossJava, jobElement));
+//            executor.execute(() -> demo10(bossJava, jobElement));
+            demo1(bossJava, jobElement);
+            demo2(bossJava, jobElement);
+            demo3(bossJava, jobElement);
+            demo4(bossJava, jobElement);
+            demo5(bossJava, jobElement);
+            demo6(bossJava, jobElement);
+            demo7(bossJava, jobElement);
+            demo8(bossJava, jobElement);
+            demo9(bossJava, jobElement);
+            demo10(bossJava, jobElement);
+            return bossJava;
         }).collect(Collectors.toList());
-
+        mapper.add(collect);
         //解析下一页
         try {
             WebElement pagerNext = webDriver.findElement(By.className("page"));
             //下一页不可点  next disabled
-            if (!pagerNext.getAttribute("class").contains("next")) {
-                pagerNext.click();
+            if (pagerNext.getText().contains("...")) {
+                List<WebElement> elements1 = webDriver.findElement(By.className("page")).findElements(By.tagName("a"));
+                elements1.get(elements1.size() - 1).click();
+                //  pagerNext.click();
                 System.out.println("--------------------解析下一页-----------------------");
                 try {
-                    Thread.sleep(500L);
+                    Thread.sleep(5000L);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

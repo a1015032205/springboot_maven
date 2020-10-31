@@ -269,4 +269,30 @@
         where id = #{id,jdbcType=INTEGER}
     </update>
 
+    <insert id="add" parameterType="java.util.List">
+        insert into boss_java_job ( company_name, job_name,
+        money, city, are, street,
+        year, education, welfare,
+        technology, num, listed,
+        type, `name`)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.companyName},
+             #{item.jobName},
+            #{item.money},
+            #{item.city},
+            #{item.are},
+             #{item.street},
+             #{item.year},
+             #{item.education},
+             #{item.welfare},
+             #{item.technology},
+             #{item.num},
+             #{item.listed},
+             #{item.type},
+             #{item.name}
+            )
+        </foreach>
+    </insert>
 </mapper>

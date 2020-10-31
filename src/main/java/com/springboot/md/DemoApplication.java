@@ -1,6 +1,7 @@
 package com.springboot.md;
 
 import lombok.extern.slf4j.Slf4j;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -12,6 +13,7 @@ import java.io.IOException;
 
 @SpringBootApplication
 @Slf4j
+@MapperScan("com.springboot.md.dao")
 public class DemoApplication extends SpringApplication {
 
     public DemoApplication() {
