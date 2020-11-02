@@ -11,13 +11,14 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 /**
@@ -26,52 +27,56 @@ import java.util.stream.Collectors;
  */
 @RestController
 @Slf4j
-public class Job extends AbstracController {
+public class JobTaskController extends AbstracController implements InitializingBean {
+
 
     @Resource
     private JavaJob51Mapper mapper;
 
     private static String url1 = "https://search.51job.com/list/000000,000000,0000,00,9,99,java,2,";
     private static String url2 = ".html?lang=c&postchannel=0000&workyear=99&cotype=99&degreefrom=99&jobterm=99&companysize=99&ord_field=0&dibiaoid=0&line=&welfare=";
+    private static volatile AtomicInteger atomicInteger = new AtomicInteger(492);
+    private static WebDriver webDriver;
 
-    private static Integer i = 492;
 
-    @RequestMapping(value = "initJob")
-    public void init() throws InterruptedException {
+    public JobTaskController() {
         //设置webdriver路径
-        System.setProperty("webdriver.chrome.driver", Objects.requireNonNull(Job.class.getClassLoader().getResource("chromedriver.exe")).getPath());
+        webDriver = get();
+    }
+
+
+    public void init() throws InterruptedException {
         //指定要爬取的地址
         String httpUrl = "127.0.0.1:11000";  // 代理IP示例
         // 设置代理IP
+        //    webDriver.manage().window().maximize();
+//        Stream.generate(Random::new).limit(5).collect(Collectors.toList()).parallelStream().forEach(x ->
+//                executor.execute(() -> {
+//                    try {
+//                        extractJob(get());
+//                        Thread.sleep(10000);
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+//                }));
+
+    }
+
+    private WebDriver get() {
         ChromeOptions options = new ChromeOptions();
-
-
         options.addArguments("--headless", "--disable-gpu");
-
         //  options.addArguments("--proxy-server=http://" + httpUrl);
         // 开启开发者模式
         options.setExperimentalOption("excludeSwitches", Collections.singletonList("enable-automation"));
-        WebDriver webDriver = new ChromeDriver(options);
-        // 窗口最大化
-        //    webDriver.manage().window().maximize();
-        // webDriver.get("https://search.51job.com/list/000000,000000,0000,00,9,08%252c09,java,2,1.html?lang=c&postchannel=0000&workyear=02%252c03&cotype=99&degreefrom=03%252c04%252c07&jobterm=99&companysize=99&ord_field=0&dibiaoid=0&line=&welfare=");
-        webDriver.get(url1 + i++ + url2);
-        System.out.println("第" + i + "页");
-        //   login(webDriver);
-        //   Thread.sleep(5000L);
-        extractJob(webDriver);
+        return new ChromeDriver(options);
     }
 
-    public void login(WebDriver webDriver) {
-        webDriver.findElement(By.className("uer")).findElement(By.tagName("a")).click();
-        List<WebElement> txt = webDriver.findElements(By.className("txt"));
-        txt.get(0).findElement(By.className("ef")).sendKeys("17621471014");
-        txt.get(1).findElement(By.className("ef")).sendKeys("A5268413");
-        webDriver.findElement(By.className("btnbox")).click();
-    }
-
-
-    private void extractJob(WebDriver webDriver) throws InterruptedException {
+    private void extractJob() throws InterruptedException {
+        int incrementAndGet = atomicInteger.incrementAndGet();
+        String url = url1 + incrementAndGet + url2;
+        webDriver.get(url);
+        System.out.println(url);
+        System.out.println("第" + incrementAndGet + "页");
         WebElement j_joblist = webDriver.findElements(By.className("j_joblist")).get(0);
         List<WebElement> er = j_joblist.findElements(By.className("er"));
         List<WebElement> el = j_joblist.findElements(By.className("el"));
@@ -92,8 +97,15 @@ public class Job extends AbstracController {
         mapper.addALL(objects);
         System.out.println("插入成功");
         webDriver.quit();
-        init();
+        extractJob();
+    }
 
+    public void login(WebDriver webDriver) {
+        webDriver.findElement(By.className("uer")).findElement(By.tagName("a")).click();
+        List<WebElement> txt = webDriver.findElements(By.className("txt"));
+        txt.get(0).findElement(By.className("ef")).sendKeys("17621471014");
+        txt.get(1).findElement(By.className("ef")).sendKeys("A5268413");
+        webDriver.findElement(By.className("btnbox")).click();
     }
 
     public void demo1(JavaJob51 bossJava, WebElement jobElement) throws InterruptedException {
@@ -185,51 +197,6 @@ public class Job extends AbstracController {
             bossJava.setWelfare(welfare);
         }
         //    log.info("待遇秒速======================》[{}]", welfare);
-    }
-
-    /**
-     * 选择区域
-     *
-     * @param webDriver
-     * @param address
-     */
-    private void are(WebDriver webDriver, String address) {
-        WebElement areElement = webDriver.findElement(By.xpath("//*[@id='filterCollapse']/div[1]/div[2]/li/div[2]/div/a[contains(text(),'" + address + "')]"));
-        //*[@id="filterCollapse"]/div[1]/div[2]/li/div[2]/div/a[2]
-        areElement.click();
-    }
-
-    /**
-     * 选择要求
-     *
-     * @param webDriver
-     * @param chosenTitle
-     * @param containsTitle
-     */
-    private void option(WebDriver webDriver, String chosenTitle, String containsTitle) {
-        WebElement containsElement = webDriver.findElement(By.xpath("//li[@class='multi-chosen']//span[contains(text(),'" + chosenTitle + "')]"));
-        WebElement optionElement = containsElement.findElement(By.xpath("../a[contains(text(),'" + containsTitle + "')]"));
-        optionElement.click();
-    }
-
-    /**
-     * 选择工资
-     *
-     * @param webDriver
-     * @param state
-     * @param money
-     * @param jobStyle
-     */
-    private void mon(WebDriver webDriver, String state, String money, String jobStyle) {
-        WebElement element = webDriver.findElement(By.xpath(" //*[@id='order']/li/div[1]/a[contains(text(),'" + state + "')]"));
-        element.click();
-        WebElement moneyElement = webDriver.findElement(By.xpath("//div[@class='item salary selectUI']//div[@class='selectUI-text text']//span[contains(text(),'不限')]"));
-        moneyElement.click();
-        WebElement numElement = moneyElement.findElement(By.xpath("..//a[contains(text(),'" + money + "')]"));
-        numElement.click();
-        webDriver.findElement(By.xpath("//*[@id='order']/li/div[3]/div/span")).click();
-        WebElement workElement = webDriver.findElement(By.xpath("//*[@id='order']/li/div[3]/div/ul/li[2]/a[contains(text(),'" + jobStyle + "')]"));
-        workElement.click();
     }
 
 }

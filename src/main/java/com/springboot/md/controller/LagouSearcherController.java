@@ -20,13 +20,13 @@ import java.util.Objects;
  */
 @RestController
 @Slf4j
-public class LagouSearcher extends AbstracController {
+public class LagouSearcherController extends AbstracController {
 
 
     @RequestMapping(value = "init")
     public void init() {
         //设置webdriver路径
-        System.setProperty("webdriver.chrome.driver", Objects.requireNonNull(LagouSearcher.class.getClassLoader().getResource("chromedriver.exe")).getPath());
+        System.setProperty("webdriver.chrome.driver", Objects.requireNonNull(LagouSearcherController.class.getClassLoader().getResource("chromedriver.exe")).getPath());
         //创建webDriver
         WebDriver webDriver = new ChromeDriver();
         //指定要爬取的地址

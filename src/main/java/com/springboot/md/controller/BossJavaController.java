@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
  */
 @RestController
 @Slf4j
-public class BossJava extends AbstracController {
+public class BossJavaController extends AbstracController {
 
     private static final List<String> list1 = CollUtil.newArrayList("不限", "高中", "大专", "本科", "硕士", "博士");
     private static final List<String> list2 = CollUtil.newArrayList("不限", "未融资", "天使轮", "A轮", "B轮", "C轮", "D轮及以上", "已上市", "不需要融资");
@@ -44,7 +44,7 @@ public class BossJava extends AbstracController {
     @RequestMapping(value = "initBoos")
     public void init() {
         //设置webdriver路径
-        System.setProperty("webdriver.chrome.driver", Objects.requireNonNull(BossJava.class.getClassLoader().getResource("chromedriver.exe")).getPath());
+        System.setProperty("webdriver.chrome.driver", Objects.requireNonNull(BossJavaController.class.getClassLoader().getResource("chromedriver.exe")).getPath());
         //指定要爬取的地址
         String httpUrl = "127.0.0.1:11000";  // 代理IP示例
         // 设置代理IP

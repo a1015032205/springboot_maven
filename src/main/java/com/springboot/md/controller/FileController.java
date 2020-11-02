@@ -23,10 +23,10 @@ import java.util.List;
 
 @Controller
 @Slf4j
-public class DemoController extends AbstracController implements InitializingBean {
+public class FileController extends AbstracController implements InitializingBean {
 
 
-    public DemoController() {
+    public FileController() {
         System.out.println("DemoController");
     }
 

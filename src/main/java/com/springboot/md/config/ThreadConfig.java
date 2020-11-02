@@ -31,9 +31,9 @@ public class ThreadConfig implements AsyncConfigurer {
         int core = Runtime.getRuntime().availableProcessors();
 
         //核心数量
-        executor.setCorePoolSize(30);
+        executor.setCorePoolSize(core);
         //最大线程数
-        executor.setMaxPoolSize(100);
+        executor.setMaxPoolSize((core << 1) + core);
         //等待队列
         executor.setQueueCapacity(100);
         //前缀名称

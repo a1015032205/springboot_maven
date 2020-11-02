@@ -7,7 +7,7 @@ package com.springboot.md.controller;
  * @Description:
  */
 
-public class test {
+public class StreamController {
     public static void main(String[] args) {
 
     }
