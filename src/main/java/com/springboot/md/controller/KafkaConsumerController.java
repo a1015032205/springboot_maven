@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Optional;
 
@@ -16,7 +17,8 @@ import java.util.Optional;
 
 @Component
 @Slf4j
-public class KafkaConsumer {
+@RequestMapping("/KafkaConsumerController")
+public class KafkaConsumerController {
     @KafkaListener(topics = {"topic1"})
     public void consumer(ConsumerRecord<?, ?> consumerRecord) {
         //判断是否为null

@@ -20,6 +20,7 @@ import java.util.Objects;
  */
 @RestController
 @Slf4j
+@RequestMapping(value = "/LagouSearcherController")
 public class LagouSearcherController extends AbstracController {
 
 

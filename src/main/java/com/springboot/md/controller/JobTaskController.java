@@ -11,7 +11,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,9 +24,8 @@ import java.util.stream.Collectors;
  * @Author 秒度111
  * @Date 2019/7/19 0019 22:09
  */
-@RestController
-@Slf4j
-public class JobTaskController extends AbstracController implements InitializingBean {
+
+public class JobTaskController extends AbstracController  {
 
 
     @Resource
@@ -134,7 +132,6 @@ public class JobTaskController extends AbstracController implements Initializing
     public void demo3(JavaJob51 bossJava, WebElement jobElement) {
         //公司名称
         String companyName = jobElement.findElement(By.tagName("a")).getText();
-        log.info("公司名称======================》[{}]", companyName);
         bossJava.setCompanyName(companyName);
     }
 

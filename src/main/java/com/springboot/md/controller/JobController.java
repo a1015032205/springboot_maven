@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
  */
 @RestController
 @Slf4j
+@RequestMapping("/JobController")
 public class JobController extends AbstracController {
 
     @Resource

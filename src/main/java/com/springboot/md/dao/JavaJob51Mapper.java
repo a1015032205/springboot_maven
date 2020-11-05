@@ -13,6 +13,8 @@ public interface JavaJob51Mapper {
 
     JavaJob51 selectByPrimaryKey(Integer id);
 
+    List<JavaJob51> getLimit();
+
     int updateByPrimaryKeySelective(JavaJob51 record);
 
     int updateByPrimaryKey(JavaJob51 record);

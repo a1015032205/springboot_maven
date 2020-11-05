@@ -1,6 +1,5 @@
 package com.springboot.md;
 
-import com.springboot.md.controller.JobController;
 import lombok.extern.slf4j.Slf4j;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.ApplicationArguments;
@@ -11,7 +10,6 @@ import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.util.Assert;
 
 import java.io.IOException;
-import java.util.Objects;
 
 @SpringBootApplication
 @Slf4j
@@ -27,7 +25,6 @@ public class DemoApplication extends SpringApplication {
     }
 
     public static void main(String[] args) throws IOException {
-        System.setProperty("webdriver.chrome.driver", Objects.requireNonNull(JobController.class.getClassLoader().getResource("chromedriver.exe")).getPath());
 //        String filePath = "E:\\java\\WorkSpace\\" + "application.yml";
 //        InputStream ism = new FileInputStream(filePath);
 //        Properties properties = new Properties();

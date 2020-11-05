@@ -33,6 +33,12 @@
         from java_job_51
         where id = #{id,jdbcType=INTEGER}
     </select>
+    <select id="getLimit" resultType="com.springboot.md.pojo.JavaJob51" parameterType="java.lang.Integer">
+        select
+            company_name, job_name, money, city
+        from java_job_51
+       limit 10
+    </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
         delete
         from java_job_51

@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
  * @Date 2019/7/19 0019 22:09
  */
 @RestController
+@RequestMapping("/BossJavaController")
 @Slf4j
 public class BossJavaController extends AbstracController {
 
