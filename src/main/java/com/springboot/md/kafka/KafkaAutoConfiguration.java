@@ -1,13 +1,10 @@
 package com.springboot.md.kafka;
 
 import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.core.*;
 import org.springframework.kafka.security.jaas.KafkaJaasLoginModuleInitializer;
 import org.springframework.kafka.support.LoggingProducerListener;
@@ -23,10 +20,10 @@ import java.io.IOException;
  * @Date: 2020-11-02 22:05
  * @Description: KafkaAutoConfiguration
  */
-
-@Configuration(proxyBeanMethods = false)
-@ConditionalOnClass(KafkaTemplate.class)
-@EnableConfigurationProperties(KafkaProperties.class)
+//
+//@Configuration(proxyBeanMethods = false)
+//@ConditionalOnClass(KafkaTemplate.class)
+//@EnableConfigurationProperties(KafkaProperties.class)
 //@Import({KafkaAnnotationDrivenConfiguration.class, KafkaStreamsAnnotationDrivenConfiguration.class})
 public class KafkaAutoConfiguration {
 

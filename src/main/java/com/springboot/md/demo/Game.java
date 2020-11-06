@@ -56,14 +56,12 @@ public class Game {
         for (int j = 0; j < list.size(); j++) {
             for (int i = 0; i <= 8; i++) {
                 if (k <= list.size() - 1) {
-
                     Map<String, Object> obj = list.get(k++);
                     System.out.print("   " + obj + "  ");
                 }
             }
             System.out.println();
         }
-
     }
 
     public static Collection<Integer> getRandom() {

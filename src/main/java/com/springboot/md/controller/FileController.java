@@ -7,6 +7,7 @@ package com.springboot.md.controller;
  * @Description
  */
 
+import cn.hutool.core.exceptions.ExceptionUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.poi.excel.ExcelUtil;
@@ -25,6 +26,8 @@ import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.List;
 
 @Controller
@@ -44,9 +47,41 @@ public class FileController extends AbstracController implements InitializingBea
         System.out.println("afterPropertiesSet");
     }
 
-    @PostConstruct
+    @   PostConstruct
     public void init() {
         System.out.println("PostConstruct");
+    }
+
+    @PostMapping("/upload")
+    public Object upload(@RequestParam("file") MultipartFile file) throws Exception {
+        try {
+            File file1 = FileUtil.file("/usr/local/files/" + file.getOriginalFilename());
+            FileUtil.writeBytes(file.getBytes(), file1);
+        } catch (Exception e) {
+            return setSuccessModelMap(ExceptionUtil.stacktraceToString(e));
+        }
+        return setSuccessModelMap("写入成功");
+    }
+
+    @PostMapping("/down")
+    public Object down() {
+        String name = null;
+        HashMap<String, Object> map = null;
+        String s = null;
+        String s1 = null;
+        try {
+            List<File> list = FileUtil.loopFiles("/usr/local/files/");
+            name = list.get(0).getName();
+            map = new HashMap<>();
+            s = new String(name.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
+            s1 = new String(name.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);
+        } catch (Exception e) {
+            return setSuccessModelMap(ExceptionUtil.stacktraceToString(e));
+        }
+        map.put("name", name);
+        map.put("s", s);
+        map.put("s1", s1);
+        return setSuccessModelMap(map);
     }
 
     @PostMapping("/demo")
@@ -60,7 +95,7 @@ public class FileController extends AbstracController implements InitializingBea
     }
 
     @GetMapping("/downXls")
-    public void downXls(HttpServletResponse response) throws Exception{
+    public void downXls(HttpServletResponse response) throws Exception {
         ExcelWriter writer = ExcelUtil.getWriter(true);
         List<JavaJob51> limit = mapper.getLimit();
         writer.setOnlyAlias(true);
@@ -72,8 +107,8 @@ public class FileController extends AbstracController implements InitializingBea
 
         writer.autoSizeColumnAll();
         response.setContentType("application/vnd.ms-excel;charset=utf-8");
-        response.setHeader("Content-Disposition","attachment;filename=test.xlsx");
-        ServletOutputStream out=response.getOutputStream();
+        response.setHeader("Content-Disposition", "attachment;filename=test.xlsx");
+        ServletOutputStream out = response.getOutputStream();
         writer.flush(out, true);
         writer.close();
         IoUtil.close(out);
