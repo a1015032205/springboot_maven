@@ -1,7 +1,7 @@
 package com.springboot.md.config;
 
 import cn.hutool.core.date.DateUtil;
-import com.springboot.md.aop.RequestLog;
+import com.springboot.md.aop.WebLog;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +25,8 @@ import java.util.Map;
  */
 @Slf4j
 @Component
-@RequestLog
-//@WebLog
+//@RequestLog
+@WebLog
 public class AbstracController implements InitializingBean {
 
     @Autowired

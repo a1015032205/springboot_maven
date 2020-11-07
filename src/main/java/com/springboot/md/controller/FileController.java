@@ -7,9 +7,11 @@ package com.springboot.md.controller;
  * @Description
  */
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.exceptions.ExceptionUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.util.ZipUtil;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
 import com.springboot.md.config.AbstracController;
@@ -27,6 +29,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -47,7 +50,7 @@ public class FileController extends AbstracController implements InitializingBea
         System.out.println("afterPropertiesSet");
     }
 
-    @   PostConstruct
+    @PostConstruct
     public void init() {
         System.out.println("PostConstruct");
     }
@@ -55,7 +58,9 @@ public class FileController extends AbstracController implements InitializingBea
     @PostMapping("/upload")
     public Object upload(@RequestParam("file") MultipartFile file) throws Exception {
         try {
-            File file1 = FileUtil.file("/usr/local/files/" + file.getOriginalFilename());
+            String originalFilename = file.getOriginalFilename();
+            String name = new String(originalFilename.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);
+            File file1 = FileUtil.file("/usr/local/files/" + name);
             FileUtil.writeBytes(file.getBytes(), file1);
         } catch (Exception e) {
             return setSuccessModelMap(ExceptionUtil.stacktraceToString(e));
@@ -63,25 +68,38 @@ public class FileController extends AbstracController implements InitializingBea
         return setSuccessModelMap("写入成功");
     }
 
-    @PostMapping("/down")
-    public Object down() {
-        String name = null;
-        HashMap<String, Object> map = null;
-        String s = null;
-        String s1 = null;
+    @RequestMapping("/down")
+    public Object down(HttpServletResponse response) throws Exception {
+        response.setContentType("application/octet-stream;charset=utf-8");
+        response.setHeader("Content-Disposition", "attachment;filename=all.zip");
+        ServletOutputStream outputStream = response.getOutputStream();
+        String name;
+        ArrayList<Object> objects = CollUtil.newArrayList();
+        String s;
         try {
             List<File> list = FileUtil.loopFiles("/usr/local/files/");
-            name = list.get(0).getName();
-            map = new HashMap<>();
-            s = new String(name.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
-            s1 = new String(name.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);
+            int i = 0;
+            List<File> renameList = new
+                    ArrayList<>();
+            for (File file : list) {
+                HashMap<String, Object> map = new HashMap<>();
+                String name1 = file.getName();
+                String STR = new String(name1.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
+                File rename = FileUtil.copy(file, FileUtil.file("/usr/local/files/copy/" + STR), false);
+                renameList.add(rename);
+                map.put("name1", name1);
+                map.put("STR", STR);
+                objects.add(map);
+            }
+            File zip = ZipUtil.zip(new File("/usr/local/files/all.zip"), false, renameList.toArray(new File[]{}));
+            outputStream.write(FileUtil.readBytes(zip));
+            outputStream.flush();
+            outputStream.close();
         } catch (Exception e) {
             return setSuccessModelMap(ExceptionUtil.stacktraceToString(e));
         }
-        map.put("name", name);
-        map.put("s", s);
-        map.put("s1", s1);
-        return setSuccessModelMap(map);
+
+        return setSuccessModelMap(objects);
     }
 
     @PostMapping("/demo")
