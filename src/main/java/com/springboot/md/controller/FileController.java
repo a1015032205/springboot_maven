@@ -85,10 +85,15 @@ public class FileController extends AbstracController implements InitializingBea
                 HashMap<String, Object> map = new HashMap<>();
                 String name1 = file.getName();
                 String STR = new String(name1.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
-                File rename = FileUtil.copy(file, FileUtil.file("/usr/local/files/copy/" + STR), false);
-                renameList.add(rename);
+                File file1 = FileUtil.writeBytes(FileUtil.readBytes(file), "/usr/local/files/copy/" + "需求" + ++i + ".DOC");
+                //    File rename = FileUtil.copy(file, FileUtil.file("/usr/local/files/copy/" + STR), false);
+                renameList.add(file1);
                 map.put("name1", name1);
                 map.put("STR", STR);
+                String name2 = file1.getName();
+                map.put("file1", name2);
+                String STR1 = new String(name2.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
+                map.put("file2", STR1);
                 objects.add(map);
             }
             File zip = ZipUtil.zip(new File("/usr/local/files/all.zip"), false, renameList.toArray(new File[]{}));
@@ -98,7 +103,7 @@ public class FileController extends AbstracController implements InitializingBea
         } catch (Exception e) {
             return setSuccessModelMap(ExceptionUtil.stacktraceToString(e));
         }
-
+        objects.forEach(System.out::println);
         return setSuccessModelMap(objects);
     }
 
