@@ -29,7 +29,7 @@ class DemoApplicationTests {
         arrayList.stream().flatMap(x -> MapUtil.get(x, "BBB", List.class).stream()).collect(Collectors.toList());
 
 
-        List<String> bbb = arrayList.stream().
+        List bbb = arrayList.stream().
                 map(x -> MapUtil.get(x, "BBB", List.class))
                 .reduce(new ArrayList<>(), (all, item) -> {
                     all.addAll(item);
