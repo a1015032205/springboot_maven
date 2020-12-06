@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
  * @Date 2020/9/14 下午2:43
  * @Description
  */
-//@Component
+@Component
 public class RedisKeyExpirationListener extends KeyExpirationEventMessageListener {
 
 	public RedisKeyExpirationListener(RedisMessageListenerContainer listenerContainer) {

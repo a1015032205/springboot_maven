@@ -1,10 +1,12 @@
 package com.springboot.md.utils;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.DataType;
 import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations.TypedTuple;
+import org.springframework.stereotype.Component;
 
 import java.util.*;
 import java.util.Map.Entry;
@@ -18,7 +20,9 @@ import java.util.concurrent.TimeUnit;
  * @date 2018-02-24 下午03:09:50
  */
 @SuppressWarnings("all")
+@Component
 public class RedisUtil {
+    @Autowired
 	private StringRedisTemplate redisTemplate;
 
 	public StringRedisTemplate getRedisTemplate() {
