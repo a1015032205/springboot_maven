@@ -1,4 +1,4 @@
-package com.springboot.md.redisson;
+package com.springboot.md.redissonv1;
 
 /**
  * @Author: 秒度
@@ -17,9 +17,9 @@ import java.util.concurrent.TimeUnit;
  * @author yangzhilong
  */
 public class RedissLockUtil {
-    private static DistributedLocker redissLock;
+    private static DistributedLockerV1 redissLock;
 
-    public static void setLocker(DistributedLocker locker) {
+    public static void setLocker(DistributedLockerV1 locker) {
         redissLock = locker;
     }
 

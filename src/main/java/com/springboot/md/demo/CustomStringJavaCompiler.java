@@ -1,4 +1,4 @@
-package com.springboot.md.controller;
+package com.springboot.md.demo;
 
 import javax.tools.*;
 import java.io.*;

@@ -3,8 +3,7 @@ package com.springboot.md.config;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -16,11 +15,12 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @Configuration
 public class LettuceRedisConfig {
 
-    @Autowired
-    private RedisProperties redisProperties;
+//    @Autowired
+//    private RedisProperties redisProperties;
+
 
     @Bean
-    public RedisTemplate redisTemplate(RedisConnectionFactory factory) {
+    public RedisTemplate redisTemplate(@Qualifier("redissonConnectionFactory") RedisConnectionFactory factory) {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(factory);
 
@@ -45,8 +45,9 @@ public class LettuceRedisConfig {
     }
 
 
+    //监听
     @Bean
-    RedisMessageListenerContainer container(RedisConnectionFactory connectionFactory) {
+    RedisMessageListenerContainer container(@Qualifier("redissonConnectionFactory") RedisConnectionFactory connectionFactory) {
 
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
@@ -56,6 +57,7 @@ public class LettuceRedisConfig {
 
 
 //集群
+
     /**
      * 配置RedisTemplate
      * 【Redis配置最终一步】
@@ -63,31 +65,30 @@ public class LettuceRedisConfig {
      * @param lettuceConnectionFactoryUvPv redis连接工厂实现
      * @return 返回一个可以使用的RedisTemplate实例
      */
-  /*  @Bean
-    public RedisTemplate redisTemplate(@Qualifier("lettuceConnectionFactoryUvPv") RedisConnectionFactory lettuceConnectionFactoryUvPv) {
-        RedisTemplate<String, Object> template = new RedisTemplate<String, Object>();
-        template.setConnectionFactory(lettuceConnectionFactoryUvPv);
-       // Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
-        FastJsonRedisSerializer jackson2JsonRedisSerializer = new FastJsonRedisSerializer<>(Object.class);
-        ObjectMapper om = new ObjectMapper();
-        om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
-        om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
-        jackson2JsonRedisSerializer.setObjectMapper(om);
-        StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
-        // key采用String的序列化方式
-        template.setKeySerializer(stringRedisSerializer);
-        // hash的key也采用String的序列化方式
-        template.setHashKeySerializer(stringRedisSerializer);
-        // value序列化方式采用jackson
-        template.setValueSerializer(jackson2JsonRedisSerializer);
-        // hash的value序列化方式采用jackson
-        template.setHashValueSerializer(jackson2JsonRedisSerializer);
-        template.afterPropertiesSet();
-        return template;
-    }
+//    @Bean
+//    public RedisTemplate redisTemplate(@Qualifier("lettuceConnectionFactoryUvPv") RedisConnectionFactory lettuceConnectionFactoryUvPv) {
+//        RedisTemplate<String, Object> template = new RedisTemplate<String, Object>();
+//        template.setConnectionFactory(lettuceConnectionFactoryUvPv);
+//        Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
+//        ObjectMapper om = new ObjectMapper();
+//        om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+//        om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
+//        jackson2JsonRedisSerializer.setObjectMapper(om);
+//        StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
+//        // key采用String的序列化方式
+//        template.setKeySerializer(stringRedisSerializer);
+//        // hash的key也采用String的序列化方式
+//        template.setHashKeySerializer(stringRedisSerializer);
+//        // value序列化方式采用jackson
+//        template.setValueSerializer(jackson2JsonRedisSerializer);
+//        // hash的value序列化方式采用jackson
+//        template.setHashValueSerializer(jackson2JsonRedisSerializer);
+//        template.afterPropertiesSet();
+//        return template;
+//    }
 
-
-    *//**
+    /*
+     *//**
      * 为RedisTemplate配置Redis连接工厂实现
      * LettuceConnectionFactory实现了RedisConnectionFactory接口
      * UVPV用Redis

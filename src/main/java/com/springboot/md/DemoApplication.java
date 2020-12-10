@@ -7,6 +7,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.AbstractApplicationContext;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.util.Assert;
 
@@ -16,6 +17,7 @@ import java.io.IOException;
 @Slf4j
 @MapperScan("com.springboot.md.dao")
 @EnableScheduling
+@EnableAsync
 public class DemoApplication extends SpringApplication {
 
     public DemoApplication() {

@@ -1,9 +1,5 @@
-package com.springboot.md.redisson;
+package com.springboot.md.redissonv1;
 
-
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
 
 /**
  * @Author: 秒度
@@ -12,14 +8,12 @@ import org.springframework.context.annotation.Configuration;
  * @Description:
  */
 
-@Configuration
-@ConfigurationProperties(prefix = "redisson")
-@ConditionalOnProperty("redisson.password")
+//@Configuration
 public class RedissonProperties {
 
     private int timeout = 3000;
 
-    private String address;
+    private String address="redis://127.0.0.1:6379";
 
     private String password;
 
