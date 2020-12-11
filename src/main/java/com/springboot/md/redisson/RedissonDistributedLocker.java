@@ -18,9 +18,10 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class RedissonDistributedLocker implements DistributedLocker {
 
-    @Qualifier("getRedisson")
+    @Qualifier("redisson")
     @Autowired
-    private RedissonClient redissonClient; // RedissonClient已经由配置类生成，这里自动装配即可
+    private RedissonClient redissonClient;
+
 
     // lock(), 拿不到lock就不罢休，不然线程就一直block
     @Override
@@ -67,4 +68,8 @@ public class RedissonDistributedLocker implements DistributedLocker {
         lock.unlock();
     }
 
+    @Override
+    public void setRedissonClient(RedissonClient redissonClient) {
+        this.redissonClient = redissonClient;
+    }
 }
