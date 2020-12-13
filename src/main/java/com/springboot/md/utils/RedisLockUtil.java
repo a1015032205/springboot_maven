@@ -17,11 +17,12 @@ import java.util.concurrent.TimeUnit;
  *
  * @author yangzhilong
  */
-public class RedissLockUtil {
-    private static DistributedLocker redissLock;
+public class RedisLockUtil {
+
+    private static DistributedLocker redisLock;
 
     public static void setLocker(DistributedLocker locker) {
-        redissLock = locker;
+        RedisLockUtil.redisLock = locker;
     }
 
     /**
@@ -31,7 +32,7 @@ public class RedissLockUtil {
      * @return
      */
     public static RLock lock(String lockKey) {
-        return redissLock.lock(lockKey);
+        return redisLock.lock(lockKey);
     }
 
     /**
@@ -40,7 +41,7 @@ public class RedissLockUtil {
      * @param lockKey
      */
     public static void unlock(String lockKey) {
-        redissLock.unlock(lockKey);
+        redisLock.unlock(lockKey);
     }
 
     /**
@@ -49,7 +50,7 @@ public class RedissLockUtil {
      * @param lock
      */
     public static void unlock(RLock lock) {
-        redissLock.unlock(lock);
+        redisLock.unlock(lock);
     }
 
     /**
@@ -58,8 +59,8 @@ public class RedissLockUtil {
      * @param lockKey
      * @param timeout 超时时间   单位：秒
      */
-    public static RLock lock(String lockKey, int timeout) {
-        return redissLock.lock(lockKey, timeout);
+    public static RLock lock(String lockKey, long timeout) {
+        return redisLock.lock(lockKey, timeout);
     }
 
     /**
@@ -69,8 +70,8 @@ public class RedissLockUtil {
      * @param unit    时间单位
      * @param timeout 超时时间
      */
-    public static RLock lock(String lockKey, TimeUnit unit, int timeout) {
-        return redissLock.lock(lockKey, unit, timeout);
+    public static RLock lock(String lockKey, TimeUnit unit, long timeout) {
+        return redisLock.lock(lockKey, unit, timeout);
     }
 
     /**
@@ -81,8 +82,8 @@ public class RedissLockUtil {
      * @param leaseTime 上锁后自动释放锁时间
      * @return
      */
-    public static boolean tryLock(String lockKey, int waitTime, int leaseTime) {
-        return redissLock.tryLock(lockKey, TimeUnit.SECONDS, waitTime, leaseTime);
+    public static boolean tryLock(String lockKey, long waitTime, long leaseTime) {
+        return redisLock.tryLock(lockKey, TimeUnit.SECONDS, waitTime, leaseTime);
     }
 
     /**
@@ -94,7 +95,7 @@ public class RedissLockUtil {
      * @param leaseTime 上锁后自动释放锁时间
      * @return
      */
-    public static boolean tryLock(String lockKey, TimeUnit unit, int waitTime, int leaseTime) {
-        return redissLock.tryLock(lockKey, unit, waitTime, leaseTime);
+    public static boolean tryLock(String lockKey, TimeUnit unit, long waitTime, long leaseTime) {
+        return redisLock.tryLock(lockKey, unit, waitTime, leaseTime);
     }
 }

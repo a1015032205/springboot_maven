@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springboot.md.redisson.DistributedLocker;
 import com.springboot.md.redisson.RedissonDistributedLocker;
-import com.springboot.md.utils.RedissLockUtil;
+import com.springboot.md.utils.RedisLockUtil;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;
@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
@@ -29,7 +30,8 @@ public class LettuceRedisConfig {
 
     @Bean
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory) {
-        RedisTemplate<String, Object> template = new RedisTemplate<>();
+        RedisTemplate template = new StringRedisTemplate(factory);
+      //  RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(factory);
 
         Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
@@ -59,12 +61,13 @@ public class LettuceRedisConfig {
     }
 
     @Bean
-    DistributedLocker distributedLocker(RedissonClient redissonClient) {
+    DistributedLocker distributedLocker(/*RedissonClient redissonClient*/) {
         DistributedLocker locker = new RedissonDistributedLocker();
-        locker.setRedissonClient(redissonClient);
-        RedissLockUtil.setLocker(locker);
+        //  locker.setRedissonClient(redissonClient);
+        RedisLockUtil.setLocker(locker);
         return locker;
     }
+
 
     //监听
     @Bean

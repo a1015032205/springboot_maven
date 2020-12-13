@@ -36,7 +36,7 @@ public class RedissonDistributedLocker implements DistributedLocker {
     public RLock lock(String lockKey, long leaseTime) {
         RLock lock = redissonClient.getLock(lockKey);
         lock.lock(leaseTime, TimeUnit.SECONDS);
-        return null;
+        return lock;
     }
 
     // timeout为加锁时间，时间单位由unit确定
@@ -68,8 +68,5 @@ public class RedissonDistributedLocker implements DistributedLocker {
         lock.unlock();
     }
 
-    @Override
-    public void setRedissonClient(RedissonClient redissonClient) {
-        this.redissonClient = redissonClient;
-    }
+
 }
