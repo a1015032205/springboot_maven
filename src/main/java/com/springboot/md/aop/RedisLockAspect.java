@@ -33,15 +33,23 @@ public class RedisLockAspect {
         Method method = ms.getMethod();
         RedisLock myAnnotation = method.getAnnotation(RedisLock.class);
         String key = myAnnotation.key();
-        RedisLockUtil.lock(key, 5L);
+        boolean b = RedisLockUtil.tryLock(key, 1L, 5L);
         String name = Thread.currentThread().getName();
+        if (b) {
+            log.info("{}拿到锁了，准备执行", name);
+            return joinPoint.proceed();
+        } else {
+            log.info("{}没有拿到", name);
+            return null;
+        }
+
 //        if (heldByCurrentThread) {
 //            log.info("{}拿到锁了，准备执行", name);
 //            return joinPoint.proceed();
 //        }
-        log.info("{}拿到锁了，准备执行", name);
+
         // log.info("{}没有拿到", name);
-        return null;
+
 
     }
 

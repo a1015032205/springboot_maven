@@ -1,11 +1,15 @@
 package com.springboot.md.controller;
 
 import com.springboot.md.aop.RedisLock;
+import com.springboot.md.dao.InfoMapper;
+import com.springboot.md.pojo.Info;
 import com.springboot.md.utils.RedisLockUtil;
 import com.springboot.md.utils.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,42 +30,73 @@ import java.util.concurrent.TimeUnit;
 @RestController
 public class RedisSonController implements InitializingBean {
 
-    private static String name;
     @Resource
     private RedisUtil redisUtil;
 
     @Autowired
     private ThreadPoolTaskExecutor executor;
 
+    @Autowired
+    private InfoMapper infoMapper;
+
+    @Autowired
+    private Environment environment;
+
+    @Autowired
+    private StringRedisTemplate redisTemplate;
+
+
     @Override
     public void afterPropertiesSet() throws Exception {
-        name = redisUtil.get("name");
+        Info info = infoMapper.selectByPrimaryKey(1);
+        Integer age = info.getAge();
+        redisUtil.setIfAbsent("info", String.valueOf(age));
     }
 
-
-    @RedisLock(key = "redisKey")
     @Scheduled(cron = "*/1 * * * * ?")
-    public void task01() throws InterruptedException {
-        Thread.sleep(5000L);
+    @RequestMapping("/lock")
+    @RedisLock(key = "redisKey")
+    public void redisLock() throws InterruptedException {
+        String port = environment.getProperty("local.server.port");
         String name = Thread.currentThread().getName();
-        log.info(name + "===task01" + RedisSonController.name);
+        TimeUnit.SECONDS.sleep(2L);
+        log.error("当前进入客户端端口：{}，当前线程名称：{},抢到了！！！！", port, name);
+//        String info = redisUtil.get("info");
+//        int i = Integer.parseInt(info);
+//
+//        if (i > 9) {
+//            TimeUnit.SECONDS.sleep(2L);
+//            redisUtil.set("info", "9");
+//            log.error("当前进入客户端端口：{}，当前线程名称：{},抢到了！！！！", port, name);
+//        } else {
+//            log.info("当前进入客户端端口：{}，当前线程名称：{},没有抢到==============", port, name);
+//        }
     }
 
-    @RedisLock(key = "redisKey")
-    @Scheduled(cron = "*/1 * * * * ?")
-    public void task02() throws InterruptedException {
-        Thread.sleep(5000L);
-        String name = Thread.currentThread().getName();
-        log.info(name + "==-task02" + name);
-    }
+//    @RedisLock(key = "redisKey")
+//    @Scheduled(cron = "*/1 * * * * ?")
+//    public void task01() throws InterruptedException {
+//        Thread.sleep(5000L);
+//        String name = Thread.currentThread().getName();
+//        log.info(name + "===task01" + RedisSonController.name);
+//    }
+//
+//    @RedisLock(key = "redisKey")
+//    @Scheduled(cron = "*/1 * * * * ?")
+//    public void task02() throws InterruptedException {
+//        Thread.sleep(5000L);
+//        String name = Thread.currentThread().getName();
+//        log.info(name + "==-task02" + name);
+//    }
 
-    @RedisLock(key = "redisKey")
-    @Scheduled(cron = "*/1 * * * * ?")
-    public void task03() throws InterruptedException {
-        Thread.sleep(5000L);
-        String name = Thread.currentThread().getName();
-        log.info(name + "===task03" + name);
-    }
+//    @RedisLock(key = "redisKey")
+//    @Scheduled(cron = "*/1 * * * * ?")
+//    public void task03() throws InterruptedException {
+//        Thread.sleep(5000L);
+//        String name = Thread.currentThread().getName();
+//        log.info(name + "===task03" + name);
+//    }
+
 
     @RequestMapping("/test")
     public void redissonTest() {
