@@ -21,4 +21,8 @@ public @interface RedisLock {
 
     String key();
 
+    long waitTime() default 1L;
+
+    long leaseTime() default  5L;
+
 }

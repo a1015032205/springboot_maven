@@ -31,7 +31,7 @@ public class LettuceRedisConfig {
     @Bean
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory) {
         RedisTemplate template = new StringRedisTemplate(factory);
-      //  RedisTemplate<String, Object> template = new RedisTemplate<>();
+        //  RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(factory);
 
         Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
@@ -57,7 +57,9 @@ public class LettuceRedisConfig {
 
     @Bean(destroyMethod = "shutdown")
     public RedissonClient redisson() throws IOException {
-        return Redisson.create(Config.fromYAML(new ClassPathResource("redisson-single.yml").getInputStream()));
+        Config config = Config.fromYAML(new ClassPathResource("redisson-single.yml").getInputStream());
+        config.setLockWatchdogTimeout(30 * 1000);
+        return Redisson.create(config);
     }
 
     @Bean

@@ -98,4 +98,8 @@ public class RedisLockUtil {
     public static boolean tryLock(String lockKey, TimeUnit unit, long waitTime, long leaseTime) {
         return redisLock.tryLock(lockKey, unit, waitTime, leaseTime);
     }
+
+    public static boolean isHeldByCurrentThread(String lockKey) {
+        return redisLock.isHeldByCurrentThread(lockKey);
+    }
 }

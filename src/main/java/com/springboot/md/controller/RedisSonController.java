@@ -10,6 +10,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -55,11 +56,12 @@ public class RedisSonController implements InitializingBean {
 
     @Scheduled(cron = "*/1 * * * * ?")
     @RequestMapping("/lock")
-    @RedisLock(key = "redisKey")
+    @RedisLock(key = "redisKey", waitTime = 0L, leaseTime = 10L)
+    @Async
     public void redisLock() throws InterruptedException {
         String port = environment.getProperty("local.server.port");
         String name = Thread.currentThread().getName();
-        TimeUnit.SECONDS.sleep(2L);
+        TimeUnit.SECONDS.sleep(3L);
         log.error("当前进入客户端端口：{}，当前线程名称：{},抢到了！！！！", port, name);
 //        String info = redisUtil.get("info");
 //        int i = Integer.parseInt(info);

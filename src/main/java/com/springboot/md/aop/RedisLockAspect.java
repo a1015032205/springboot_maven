@@ -1,5 +1,6 @@
 package com.springboot.md.aop;
 
+import cn.hutool.core.map.MapUtil;
 import com.springboot.md.utils.RedisLockUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
@@ -9,6 +10,8 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @Author: 秒度
@@ -23,67 +26,71 @@ public class RedisLockAspect {
 
     @Pointcut("@annotation(com.springboot.md.aop.RedisLock)")
     public void redisLock() {
-
     }
 
     @Around("redisLock()")
     public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
-        // log.info("第一个执行around");
+        String name = Thread.currentThread().getName();
+        Map<String, Object> map = getMap(joinPoint);
+        String key = MapUtil.getStr(map, "key");
+        long waitTime = MapUtil.getLong(map, "waitTime");
+        long leaseTime = MapUtil.getLong(map, "leaseTime");
+        if (RedisLockUtil.tryLock(key, waitTime, leaseTime)) {
+            log.error("{}，抢到了！！！ 准备执行==========", name);
+            Object proceed = joinPoint.proceed();
+            unLock(joinPoint);
+            return proceed;
+        } else {
+            log.info("{}，没有抢到", name);
+            return null;
+        }
+
+    }
+
+
+    @AfterThrowing("redisLock()")
+    public void afterThrowing(JoinPoint joinPoint) {
+        unLock(joinPoint);
+    }
+
+    private Map<String, Object> getMap(JoinPoint joinPoint) {
         MethodSignature ms = (MethodSignature) joinPoint.getSignature();
         Method method = ms.getMethod();
         RedisLock myAnnotation = method.getAnnotation(RedisLock.class);
         String key = myAnnotation.key();
-        boolean b = RedisLockUtil.tryLock(key, 1L, 5L);
-        String name = Thread.currentThread().getName();
-        if (b) {
-            log.info("{}拿到锁了，准备执行", name);
-            return joinPoint.proceed();
-        } else {
-            log.info("{}没有拿到", name);
-            return null;
-        }
-
-//        if (heldByCurrentThread) {
-//            log.info("{}拿到锁了，准备执行", name);
-//            return joinPoint.proceed();
-//        }
-
-        // log.info("{}没有拿到", name);
-
-
+        long waitTime = myAnnotation.waitTime();
+        long leaseTime = myAnnotation.leaseTime();
+        return MapUtil.builder(new HashMap<String, Object>())
+                .put("key", key)
+                .put("waitTime", waitTime)
+                .put("leaseTime", leaseTime)
+                .build();
     }
+
+
+    public void unLock(JoinPoint joinPoint) {
+        Map<String, Object> map = getMap(joinPoint);
+        String key = MapUtil.getStr(map, "key");
+        boolean heldByCurrentThread = RedisLockUtil.isHeldByCurrentThread(key);
+        if (heldByCurrentThread) {
+
+            RedisLockUtil.unlock(key);
+            log.error(Thread.currentThread().getName() + "私放锁");
+        }
+    }
+
 
     @Before("redisLock()")
     public void before(JoinPoint joinPoint) throws InterruptedException {
-        //  log.info("第二个执行before之后 执行业务代码");
-        //等待结束后才执行业务代码
-        //   TimeUnit.SECONDS.sleep(3L);
-
     }
 
     @AfterReturning("redisLock()")
     public void afterReturn(JoinPoint joinPoint) {
 
-        //   log.info("第三执行afterReturn");
     }
 
 
     @After("redisLock()")
     public void after(JoinPoint joinPoint) {
-        MethodSignature ms = (MethodSignature) joinPoint.getSignature();
-        Method method = ms.getMethod();
-        RedisLock myAnnotation = method.getAnnotation(RedisLock.class);
-        String key = myAnnotation.key();
-        RedisLockUtil.unlock(key);
-        String name = Thread.currentThread().getName();
-        log.info(name + "释放了锁");
-        //     log.info("第四after");
     }
-
-    @AfterThrowing("redisLock()")
-    public void afterThrowing() {
-        //   log.info("afterThrowing");
-    }
-
-
 }

@@ -25,4 +25,5 @@ public interface DistributedLocker {
 
     void unlock(RLock lock);
 
+    boolean isHeldByCurrentThread(String lockKey);
 }
